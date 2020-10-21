@@ -1,0 +1,24 @@
+In this level, we have a binary who ask us for a login, then a credential.
+The credential is a scanf() using %u, so it can only be an unsigned int.
+
+We can see that the bin is protected by ptrace, if we try to debug it with GDB
+if we write more than 5 characters in the "login prompt", but we can just put
+$eax to 0 after the call of ptrace() to avoid it.
+But, if strlen(login) < 6, the program will exit.
+
+But if the strlen(login) is > 5, then he do a lot of operations depending on the
+login we passed, they probably have no senses, but at the end, he will compare the
+result of the operations with the credentials we passed, so if we enter this, it
+works:
+
+./level06
+***********************************
+*               level06           *
+***********************************
+-> Enter Login: BBBBBBBBBBBBBBB
+***********************************
+***** NEW ACCOUNT DETECTED ********
+***********************************
+-> Enter Serial: 6237187
+Authenticated!
+#

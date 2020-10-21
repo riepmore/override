@@ -1,0 +1,7 @@
+This binary named l33t-m$n ask us to enter an username and to send a essage to @Unix-Dude.
+So we imagined that there's a network issue or something, but no. The message is juste copied on a var that's all.
+
+After looking to the binary, we saw that set_username() have an issue. He copy 41 chars on an array that contain only 40.
+So, the last char will overwrite the variable used for the length of the strncpy in set_msg().
+
+With that, we can overflow the msg and then, overwrite the EIP to the function secret_backdoor() who call a system().

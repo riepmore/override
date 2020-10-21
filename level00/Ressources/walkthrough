@@ -1,0 +1,15 @@
+In level00, the binary ask for a password, by disassembling it you can find that it stores the user input as an int and compares it to 0x149c (5276)
+
+So you can use this as a password: 
+level00@OverRide:~$ ./level00
+***********************************
+* 	     -Level00 -		  *
+***********************************
+Password:5276
+
+Authenticated!
+$ whoami
+level01
+$ cd ../level01
+$ cat .pass
+uSq2ehEGT6c9S24zbshexZQBXUGrncxn5sD5QfGL
